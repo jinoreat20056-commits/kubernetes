@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jenkins + Kubernetes Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; font-family: Arial, sans-serif; color: #183153; background: linear-gradient(135deg, #e8f3ff, #f5f7fb); }
+    main { width: min(90%, 650px); padding: 42px 32px; text-align: center; background: white; border-radius: 18px; box-shadow: 0 12px 35px #18315318; }
+    .badge { display: inline-block; padding: 8px 14px; border-radius: 20px; background: #e2f8e9; color: #176b35; font-weight: bold; font-size: 14px; }
+    h1 { margin: 22px 0 12px; font-size: clamp(28px, 5vw, 42px); }
+    p { line-height: 1.65; color: #52627a; }
+    .details { margin-top: 26px; padding: 18px; background: #f4f7fb; border-radius: 12px; text-align: left; }
+    .details p { margin: 8px 0; }
+    code { color: #174ea6; }
+  </style>
+</head>
+<body>
+  <main>
+    <span class="badge">Application is running</span>
+    <h1>Jenkins + Kubernetes Demo</h1>
+    <p>This simple web application is served by Nginx and demonstrates deployment from Jenkins to Kubernetes.</p>
+    <div class="details">
+      <p><strong>Application:</strong> Simple Demo Website</p>
+      <p><strong>Web server:</strong> Nginx</p>
+      <p><strong>Container port:</strong> 80</p>
+      <p><strong>Deployment target:</strong> Kubernetes</p>
+    </div>
+  </main>
+</body>
+</html>
