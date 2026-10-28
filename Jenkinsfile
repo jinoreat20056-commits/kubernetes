@@ -1,56 +1,38 @@
+
 pipeline {
     agent any
 
     environment {
-        DOCKER_EXE = 'C:\\Users\\HP\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
-        KUBECTL_EXE = 'C:\\Users\\HP\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\kubectl.exe'
-        KUBE_CONFIG = 'C:\\Users\\HP\\.kube\\config'
-        IMAGE_NAME = 'simple-web-app:1.0'
+        KUBECTL = 'C:\\Users\\HP\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\kubectl.exe'
+        KUBECONFIG_PATH = 'C:\\Users\\HP\\.kube\\config'
     }
 
     stages {
-        stage('Verify Kubernetes Connection') {
+        stage('Verify Kubernetes Context') {
             steps {
                 bat '''
-                    echo ===== CURRENT CLUSTER =====
-                    "%KUBECTL_EXE%" --kubeconfig="%KUBE_CONFIG%" config current-context
+                    echo ===== CURRENT CONTEXT =====
+                    "%KUBECTL%" --kubeconfig="%KUBECONFIG_PATH%" config current-context
                     if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
+        stage('Verify Cluster Connection') {
+            steps {
+                bat '''
                     echo ===== KUBERNETES NODES =====
-                    "%KUBECTL_EXE%" --kubeconfig="%KUBE_CONFIG%" get nodes
+                    "%KUBECTL%" --kubeconfig="%KUBECONFIG_PATH%" get nodes
                     if errorlevel 1 exit /b 1
                 '''
             }
         }
 
-        stage('Build Local Image') {
+        stage('Verify Cluster Information') {
             steps {
                 bat '''
-                    "%DOCKER_EXE%" build -t %IMAGE_NAME% .
-                    if errorlevel 1 exit /b 1
-                '''
-            }
-        }
-
-        stage('Deploy Application') {
-            steps {
-                bat '''
-                    "%KUBECTL_EXE%" --kubeconfig="%KUBE_CONFIG%" apply -f deployment.yaml
-                    if errorlevel 1 exit /b 1
-                    "%KUBECTL_EXE%" --kubeconfig="%KUBE_CONFIG%" apply -f service.yaml
-                    if errorlevel 1 exit /b 1
-                '''
-            }
-        }
-
-        stage('Verify Deployment') {
-            steps {
-                bat '''
-                    "%KUBECTL_EXE%" --kubeconfig="%KUBE_CONFIG%" rollout status deployment/simple-web-app --timeout=180s
-                    if errorlevel 1 exit /b 1
-                    "%KUBECTL_EXE%" --kubeconfig="%KUBE_CONFIG%" get pods
-                    if errorlevel 1 exit /b 1
-                    "%KUBECTL_EXE%" --kubeconfig="%KUBE_CONFIG%" get services
+                    echo ===== CLUSTER INFORMATION =====
+                    "%KUBECTL%" --kubeconfig="%KUBECONFIG_PATH%" cluster-info
                     if errorlevel 1 exit /b 1
                 '''
             }
@@ -59,7 +41,7 @@ pipeline {
 
     post {
         success {
-            echo 'SUCCESS: Jenkins connected to Kubernetes and deployed the simple web application.'
+            echo 'SUCCESS: Jenkins connected to Kubernetes and verified the cluster.'
         }
         failure {
             echo 'FAILED: Check the first error in Console Output.'
